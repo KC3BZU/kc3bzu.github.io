@@ -120,9 +120,14 @@
   <script src="https://unpkg.com/dicom-parser@1.8.6/dist/dicomParser.min.js"></script>
   <script src="https://unpkg.com/cornerstone-core@2.3.0/dist/cornerstone.js"></script>
   <script src="https://unpkg.com/cornerstone-math@0.1.8/dist/cornerstoneMath.min.js"></script>
-  <script src="https://unpkg.com/cornerstone-wado-image-loader@0.15.4/dist/cornerstoneWADOImageLoader.min.js"></script>
-  <!-- Codecs for JPEG/JPEG2000/Deflate -- use a relatively small, combined build -->
-  <script src="https://unpkg.com/cornerstone-wado-image-loader@0.15.4/dist/cornerstoneWADOImageLoaderCodecs.min.js"></script>
+  <!-- Cornerstone WADO image loader and codecs
+       Note: Avoid pinning to a specific (and potentially unavailable) version to
+       prevent the MIME type mis‑match error seen when a version no longer
+       exists on the CDN. Rely on unpkg to serve the latest stable build.
+       See https://github.com/cornerstonejs/cornerstoneWADOImageLoader for details. -->
+  <script src="https://unpkg.com/cornerstone-wado-image-loader/dist/cornerstoneWADOImageLoader.min.js"></script>
+  <!-- Codecs for JPEG/JPEG2000/Deflate -- use the combined build from the same package -->
+  <script src="https://unpkg.com/cornerstone-wado-image-loader/dist/cornerstoneWADOImageLoaderCodecs.min.js"></script>
 
   <script>
     // Configure external dependencies for the WADO image loader
@@ -348,7 +353,8 @@
           const frameObj = series.frames[frameIndex];
           imageId = frameObj.imageId;
         }
-        const image = await cornerstone.loadAndCacheImage(imageId);
+        // Use cornerstone.loadImage directly; loadAndCacheImage may not exist in some versions
+        const image = await (cornerstone.loadAndCacheImage ? cornerstone.loadAndCacheImage(imageId) : cornerstone.loadImage(imageId));
         const viewport = cornerstone.getDefaultViewportForImage(viewer, image);
         cornerstone.displayImage(viewer, image, viewport);
       } catch (err) {
