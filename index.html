@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DICOM Scrubber</title>
+  <style>
+    /* A minimalist layout that focuses attention on the images */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    h1 {
+      font-weight: 400;
+      text-align: center;
+      padding: 1rem 0;
+      margin: 0;
+    }
+    #dropZone {
+      border: 2px dashed #bbb;
+      border-radius: 12px;
+      width: 80%;
+      max-width: 700px;
+      margin: 1.5rem auto;
+      padding: 2rem;
+      text-align: center;
+      color: #777;
+      cursor: pointer;
+      transition: border-color 0.2s ease-in-out;
+    }
+    #dropZone.hover {
+      border-color: #007bff;
+    }
+    #viewerContainer {
+      width: 80%;
+      max-width: 700px;
+      margin: 0 auto;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    #viewer {
+      width: 512px;
+      height: 512px;
+      background-color: #000;
+      margin: 1rem auto;
+      position: relative;
+    }
+    #controls {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #frameSlider {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    #frameLabel {
+      margin-top: 0.5rem;
+    }
+    #buttonGroup {
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    select {
+      margin-bottom: 0.5rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>DICOM Scrubber</h1>
+  <div id="dropZone">
+    Drag &amp; drop DICOM file(s) here or click to select.
+  </div>
+  <input type="file" id="fileInput" multiple style="display: none" />
+  <div id="viewerContainer">
+    <div id="seriesSelectorContainer" style="display: none; width: 100%; text-align: center;">
+      <label for="seriesSelector">Select Series:</label>
+      <select id="seriesSelector"></select>
+    </div>
+    <div id="viewer"></div>
+    <div id="controls">
+      <input type="range" id="frameSlider" min="1" max="1" value="1" />
+      <div id="frameLabel">
+        Frame <span id="frameNumber">1</span> / <span id="frameTotal">1</span>
+      </div>
+      <div id="buttonGroup">
+        <button id="prevFrame" title="Previous Frame">&#9664;</button>
+        <button id="nextFrame" title="Next Frame">&#9654;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Libraries -->
+  <script src="https://unpkg.com/dicom-parser@1.8.6/dist/dicomParser.min.js"></script>
+  <script src="https://unpkg.com/cornerstone-core@2.3.0/dist/cornerstone.js"></script>
+  <script src="https://unpkg.com/cornerstone-math@0.1.8/dist/cornerstoneMath.min.js"></script>
+  <script src="https://unpkg.com/cornerstone-wado-image-loader@0.15.4/dist/cornerstoneWADOImageLoader.min.js"></script>
+  <!-- Codecs for JPEG/JPEG2000/Deflate -- use a relatively small, combined build -->
+  <script src="https://unpkg.com/cornerstone-wado-image-loader@0.15.4/dist/cornerstoneWADOImageLoaderCodecs.min.js"></script>
+
+  <script>
+    // Configure external dependencies for the WADO image loader
+    cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+    cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
+    // Disable web workers for simplicity; decoding will occur on the main thread
+    cornerstoneWADOImageLoader.configure({
+      useWebWorkers: false,
+    });
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const viewerContainer = document.getElementById('viewerContainer');
+    const viewer = document.getElementById('viewer');
+    const seriesSelectorContainer = document.getElementById('seriesSelectorContainer');
+    const seriesSelector = document.getElementById('seriesSelector');
+    const frameSlider = document.getElementById('frameSlider');
+    const frameNumberSpan = document.getElementById('frameNumber');
+    const frameTotalSpan = document.getElementById('frameTotal');
+    const prevFrameBtn = document.getElementById('prevFrame');
+    const nextFrameBtn = document.getElementById('nextFrame');
+
+    // Data structures to hold series and frames
+    let seriesList = {};
+    let currentSeriesUID = null;
+    let currentFrameIndex = 0;
+
+    // Add event listeners for drag & drop
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('hover');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('hover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('hover');
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    /**
+     * Handle an array-like list of files.  Parses each DICOM file to gather
+     * series information and registers the file with the Cornerstone WADO image loader.
+     * Once all files have been processed, the first series is loaded.
+     * @param {FileList | File[]} files
+     */
+    function handleFiles(files) {
+      if (!files || files.length === 0) return;
+      // Reset previous state
+      seriesList = {};
+      currentSeriesUID = null;
+      currentFrameIndex = 0;
+      seriesSelector.innerHTML = '';
+      seriesSelectorContainer.style.display = 'none';
+      viewerContainer.style.display = 'none';
+
+      const parsePromises = [];
+      for (const file of files) {
+        parsePromises.push(parseDicomFile(file));
+      }
+      Promise.all(parsePromises).then(() => {
+        const uids = Object.keys(seriesList);
+        if (uids.length === 0) {
+          alert('No DICOM images could be parsed from the selected files.');
+          return;
+        }
+        // Populate series selector if more than one series detected
+        if (uids.length > 1) {
+          seriesSelectorContainer.style.display = 'block';
+          uids.forEach((uid) => {
+            const series = seriesList[uid];
+            const option = document.createElement('option');
+            option.value = uid;
+            const description = series.description || 'Series ' + (uid.slice(-6));
+            option.textContent = `${description} (${getTotalFrames(series)} frames)`;
+            seriesSelector.appendChild(option);
+          });
+        }
+        // Select first series by default
+        currentSeriesUID = uids[0];
+        if (uids.length > 1) {
+          seriesSelector.value = currentSeriesUID;
+        }
+        // Enable the viewer
+        viewerContainer.style.display = 'flex';
+        if (!cornerstone.getEnabledElement(viewer)) {
+          cornerstone.enable(viewer);
+        }
+        // Load the first frame
+        loadFrame(0);
+      });
+    }
+
+    /**
+     * Parse a DICOM file using dicomParser to extract metadata needed for sorting and grouping.
+     * Registers the file with the Cornerstone WADO image loader so it can be displayed later.
+     * @param {File} file
+     */
+    function parseDicomFile(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          let dataSet;
+          try {
+            dataSet = dicomParser.parseDicom(event.target.result);
+          } catch (ex) {
+            console.warn('Unable to parse file as DICOM:', file.name);
+            resolve();
+            return;
+          }
+          // Extract series UID and series description (if available)
+          const seriesUID = dataSet.string('x0020000e') || 'unknown';
+          const seriesDesc = dataSet.string('x0008103e');
+          // Determine number of frames in this file (multi-frame objects)
+          const numberOfFrames = parseInt(dataSet.string('x00280008') || '1', 10);
+          // Register file with the WADO image loader to obtain an imageId
+          const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
+          // Initialize the series entry if it doesn't exist
+          if (!seriesList[seriesUID]) {
+            seriesList[seriesUID] = {
+              frames: [],
+              multiFrame: false,
+              numberOfFrames: 0,
+              description: seriesDesc,
+              sorted: false,
+            };
+          }
+          const series = seriesList[seriesUID];
+          if (numberOfFrames > 1) {
+            // Multi-frame object (e.g. dynamic or nuclear medicine). Record once.
+            series.multiFrame = true;
+            // Keep the maximum number of frames if multiple multi-frame files appear
+            series.numberOfFrames = Math.max(series.numberOfFrames, numberOfFrames);
+            series.frames.push({ imageId, frames: numberOfFrames });
+          } else {
+            // Single-frame file. Capture instance number and image position for sorting
+            const instanceNumber = parseInt(
+              dataSet.intString('x00200013') || dataSet.intString('x00201002') || '0',
+              10,
+            );
+            const position = dataSet.string('x00200032');
+            series.frames.push({ imageId, instanceNumber, position });
+          }
+          resolve();
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    /**
+     * Determine the total number of frames for a given series object. For multi-frame
+     * objects this comes from the numberOfFrames field; otherwise it's simply the
+     * length of the frames array.
+     * @param {object} series
+     */
+    function getTotalFrames(series) {
+      if (!series) return 0;
+      if (series.multiFrame) {
+        return series.numberOfFrames;
+      }
+      return series.frames.length;
+    }
+
+    /**
+     * Sort single-frame objects within a series based on instance number or slice
+     * position. This ensures CT/MR images are ordered anatomically head-to-toe.
+     * This function only runs once per series (lazy initialization).
+     * @param {object} series
+     */
+    function sortFrames(series) {
+      if (series.multiFrame) return;
+      series.frames.sort((a, b) => {
+        if (a.instanceNumber !== undefined && b.instanceNumber !== undefined) {
+          return a.instanceNumber - b.instanceNumber;
+        }
+        if (a.position && b.position) {
+          const zA = parseFloat(a.position.split('\\')[2] || '0');
+          const zB = parseFloat(b.position.split('\\')[2] || '0');
+          return zA - zB;
+        }
+        return 0;
+      });
+    }
+
+    /**
+     * Load and display a frame given its index within the current series. Handles
+     * multi-frame objects (encoded within a single file) as well as stacks of
+     * single-frame files. Updates UI elements accordingly.
+     * @param {number} frameIndex Zero-based index into the current series
+     */
+    async function loadFrame(frameIndex) {
+      const series = seriesList[currentSeriesUID];
+      if (!series) return;
+      // Ensure frames are sorted for single-frame stacks
+      if (!series.sorted) {
+        sortFrames(series);
+        series.sorted = true;
+      }
+      const total = getTotalFrames(series);
+      if (frameIndex < 0 || frameIndex >= total) return;
+      currentFrameIndex = frameIndex;
+      // Update the slider and labels
+      frameSlider.max = total;
+      frameSlider.value = frameIndex + 1;
+      frameNumberSpan.textContent = frameIndex + 1;
+      frameTotalSpan.textContent = total;
+      try {
+        let imageId;
+        if (series.multiFrame) {
+          // Only one multi-frame file is stored per series; use the first one
+          const fileObj = series.frames[0];
+          // Frame indices in the query string appear to be one-based
+          imageId = `${fileObj.imageId}?frame=${frameIndex + 1}`;
+        } else {
+          const frameObj = series.frames[frameIndex];
+          imageId = frameObj.imageId;
+        }
+        const image = await cornerstone.loadAndCacheImage(imageId);
+        const viewport = cornerstone.getDefaultViewportForImage(viewer, image);
+        cornerstone.displayImage(viewer, image, viewport);
+      } catch (err) {
+        console.error('Error loading image frame:', err);
+      }
+    }
+
+    // Event listeners for series selection and frame navigation
+    seriesSelector.addEventListener('change', () => {
+      currentSeriesUID = seriesSelector.value;
+      loadFrame(0);
+    });
+    frameSlider.addEventListener('input', (e) => {
+      const idx = parseInt(e.target.value, 10) - 1;
+      loadFrame(idx);
+    });
+    prevFrameBtn.addEventListener('click', () => {
+      const series = seriesList[currentSeriesUID];
+      const total = getTotalFrames(series);
+      const newIndex = (currentFrameIndex - 1 + total) % total;
+      loadFrame(newIndex);
+    });
+    nextFrameBtn.addEventListener('click', () => {
+      const series = seriesList[currentSeriesUID];
+      const total = getTotalFrames(series);
+      const newIndex = (currentFrameIndex + 1) % total;
+      loadFrame(newIndex);
+    });
+  </script>
+</body>
+</html>
