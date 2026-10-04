@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tyler's Everest Three Passes Trek — Family Tracker</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root { --bg:#f7f4ec; --card:#ffffff; --ink:#2b2620; --muted:#7a7166; --accent:#b4552d; --accent2:#2d6a4f; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); }
+  header { background:linear-gradient(135deg,#1d3557,#457b9d); color:#fff; padding:2.2rem 1.2rem 1.6rem; text-align:center; }
+  header h1 { margin:0 0 .4rem; font-size:1.7rem; }
+  header p { margin:.2rem 0; opacity:.92; }
+  #status { display:inline-block; margin-top:.8rem; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35); padding:.5rem 1rem; border-radius:999px; font-weight:600; }
+  #map { height:56vh; min-height:340px; }
+  .wrap { max-width:900px; margin:0 auto; padding:1.2rem; }
+  .legend { font-size:.85rem; color:var(--muted); margin:.6rem 0 1.4rem; }
+  .day { background:var(--card); border-radius:14px; box-shadow:0 2px 10px rgba(0,0,0,.07); margin:0 0 1.2rem; overflow:hidden; display:flex; flex-direction:column; }
+  .day.today { outline:3px solid var(--accent); }
+  .day img { width:100%; height:240px; object-fit:cover; display:block; background:#ddd; }
+  .day .body { padding:1rem 1.2rem 1.2rem; }
+  .day .date { font-size:.8rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+  .day h2 { margin:.25rem 0 .5rem; font-size:1.25rem; }
+  .stats { display:flex; flex-wrap:wrap; gap:.4rem .9rem; font-size:.88rem; color:var(--muted); margin-bottom:.6rem; }
+  .stats b { color:var(--ink); font-weight:600; }
+  .hl { font-size:.95rem; }
+  .badge { display:inline-block; font-size:.75rem; font-weight:700; background:var(--accent2); color:#fff; border-radius:999px; padding:.15rem .6rem; margin-left:.5rem; vertical-align:middle; }
+  .passbadge { background:#7b2d8b; }
+  footer { text-align:center; color:var(--muted); font-size:.82rem; padding:1.5rem 1rem 2.5rem; }
+  @media (min-width:720px){ .day{flex-direction:row;} .day img{width:320px;height:auto;min-height:220px;} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tyler's Everest Three Passes Trek</h1>
+  <p>Oct 7 – 21, 2026 &middot; Lukla to Lukla via Kongma La &amp; Cho La</p>
+  <div id="status">Loading…</div>
+</header>
+<div id="map"></div>
+<div class="wrap">
+  <p class="legend">Tap a numbered marker on the map to jump to that day. Route line and marker positions are approximate. Photos are representative of each area's terrain.</p>
+  <div id="days"></div>
+</div>
+<footer>
+  <p>Made with love for the Bush family &middot; temporary page, safe travels Tyler!</p>
+  <p style="font-size:.75rem">Map data &copy; OpenStreetMap contributors</p>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const IMAGES = {
+ "lukla": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/A_view_of_Lukla_Airport.jpg/1280px-A_view_of_Lukla_Airport.jpg",
+  "attr": "Lukla airstrip \u2014 Wikimedia Commons"
+ },
+ "monjo": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Entrance_gate_of_the_Sagarmatha_National_Park_in_Nepal%2C_photographed_on_November_25%2C_2023.jpg/500px-Entrance_gate_of_the_Sagarmatha_National_Park_in_Nepal%2C_photographed_on_November_25%2C_2023.jpg",
+  "attr": "Sagarmatha National Park entrance gate near Monjo \u2014 Wikimedia Commons"
+ },
+ "namche": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Namche_Bazaar_Nepal.jpg/1280px-Namche_Bazaar_Nepal.jpg",
+  "attr": "Namche Bazaar \u2014 Wikimedia Commons"
+ },
+ "tengboche": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Tengboche_monastery-Nmnogueira.jpg/1280px-Tengboche_monastery-Nmnogueira.jpg",
+  "attr": "Tengboche Monastery \u2014 Wikimedia Commons"
+ },
+ "dingboche": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/3/35/Dingboche_Lhotse.jpg",
+  "attr": "Dingboche with Lhotse \u2014 Wikimedia Commons"
+ },
+ "chukhung": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/%D0%92%D0%B8%D0%B4_%D0%B8%D0%B7_%D0%BF%D0%BE%D1%81%D0%B5%D0%BB%D0%BA%D0%B0_%D0%A7%D1%83%D0%BA%D1%85%D1%83%D0%BD%D0%B3_%D0%B2%D0%BD%D0%B8%D0%B7_%D0%BD%D0%B0_%D0%B4%D0%BE%D0%BB%D0%B8%D0%BD%D1%83.jpg",
+  "attr": "Chukhung valley \u2014 Wikimedia Commons"
+ },
+ "kongmala": {
+  "url": "https://www.himalaya-info.org/images/Images%20Paesse/Kongma%20La/Kongma%20La%20Ost%205535%20zum%20Chomolonzo%20+%20Makalu%20+%20Baruntse_1280.jpg",
+  "attr": "Kongma La pass (5,535m), view east \u2014 himalaya-info.org"
+ },
+ "lobuche": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Banner_Lobuche.jpg/3840px-Banner_Lobuche.jpg",
+  "attr": "Lobuche \u2014 Wikimedia Commons"
+ },
+ "chola": {
+  "url": "https://cdn.britannica.com/17/242417-050-49F99308/Himalaya-mountain-peaks-Cho-La-Pass-Everest-National-Park-Nepal.jpg",
+  "attr": "Cho La pass \u2014 Encyclopaedia Britannica"
+ },
+ "gokyo": {
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Gokyo_Lake%2C_Arakamtse%2C_Cholatse%2C_Nepal%2C_Himalayas.jpg/3840px-Gokyo_Lake%2C_Arakamtse%2C_Cholatse%2C_Nepal%2C_Himalayas.jpg",
+  "attr": "Gokyo Lake \u2014 Wikimedia Commons"
+ },
+ "phortse": {
+  "url": "https://folio3.furman.edu/peripatos/assets/images/05_Nepal_2025/01_The_Trek_Day_by_Day/Phortse_IMG_6431.jpg",
+  "attr": "Phortse village \u2014 Furman University"
+ }
+};
+
+const DAYS = [
+ {n:1, date:"Oct 7",  title:"Fly to Lukla, hike to Monjo", dist:"8.4 mi", gain:"2,369 ft", maxAlt:"9,354 ft", sleep:"Monjo (9,307 ft)", hl:"Trek begins! Fly into Lukla, enter Sagarmatha National Park.", ll:[27.7742,86.7228], img:"lukla"},
+ {n:2, date:"Oct 8",  title:"Trek to Namche Bazaar", dist:"3.2 mi", gain:"2,457 ft", maxAlt:"11,114 ft", sleep:"Namche Bazaar (11,114 ft)", hl:"Climb to the famous Sherpa market town.", ll:[27.8069,86.7140], img:"namche"},
+ {n:3, date:"Oct 9",  title:"Acclimatization day", dist:"4.1 mi", gain:"1,775 ft", maxAlt:"12,649 ft", sleep:"Namche Bazaar (11,114 ft)", hl:"Side trip to Hotel Everest View for first big Himalayan panorama.", ll:[27.8069,86.7140], img:"namche"},
+ {n:4, date:"Oct 10", title:"Trek to Tengboche", dist:"6.2 mi", gain:"3,442 ft", maxAlt:"12,543 ft", sleep:"Tengboche (12,543 ft)", hl:"Visit Tengboche Monastery, the spiritual heart of the Khumbu.", ll:[27.8358,86.7639], img:"tengboche"},
+ {n:5, date:"Oct 11", title:"Trek to Dingboche", dist:"9 mi", gain:"3,734 ft", maxAlt:"14,235 ft", sleep:"Dingboche (14,235 ft)", hl:"Ama Dablam dominates the view on the long climb up.", ll:[27.8920,86.8296], img:"dingboche"},
+ {n:6, date:"Oct 12", title:"Acclimatization day", dist:"2.6 mi", gain:"2,241 ft", maxAlt:"16,453 ft", sleep:"Dingboche (14,235 ft)", hl:"Optional climb of Nangkartshang Peak for acclimatization.", ll:[27.8920,86.8296], img:"dingboche"},
+ {n:7, date:"Oct 13", title:"Trek to Chukhung", dist:"6.5 mi", gain:"3,842 ft", maxAlt:"18,053 ft", sleep:"Chukhung (15,492 ft)", hl:"Staging for the first big pass — Kongma La tomorrow.", ll:[27.9030,86.8700], img:"chukhung"},
+ {n:8, date:"Oct 14", title:"Over Kongma La to Lobuche", dist:"6.9 mi", gain:"3,038 ft", maxAlt:"18,037 ft", sleep:"Lobuche (16,125 ft)", hl:"First pass! Kongma La (18,159 ft) — guide recommended today.", ll:[27.9480,86.8100], img:"kongmala", pass:true},
+ {n:9, date:"Oct 15", title:"Trek to Dzongla", dist:"4.1 mi", gain:"1,153 ft", maxAlt:"16,165 ft", sleep:"Dzongla (15,800 ft)", hl:"Short day, resting up for pass #2.", ll:[27.9570,86.7680], img:"lobuche"},
+ {n:10,date:"Oct 16", title:"Over Cho La to Gokyo", dist:"7.2 mi", gain:"3,238 ft", maxAlt:"17,617 ft", sleep:"Gokyo (15,594 ft)", hl:"Second pass! Cho La (17,782 ft), then down to the turquoise Gokyo Lakes — guide recommended.", ll:[27.9470,86.6920], img:"chola", pass:true},
+ {n:11,date:"Oct 17", title:"Trek to Phortse", dist:"10.3 mi", gain:"1,801 ft", maxAlt:"15,594 ft", sleep:"Phortse (12,340 ft)", hl:"Leaving the lakes, descending toward greener valleys.", ll:[27.8470,86.7500], img:"gokyo"},
+ {n:12,date:"Oct 18", title:"Trek to Namche Bazaar", dist:"6.3 mi", gain:"2,208 ft", maxAlt:"13,033 ft", sleep:"Namche Bazaar (11,114 ft)", hl:"Back to Namche — showers and bakeries!", ll:[27.8069,86.7140], img:"phortse"},
+ {n:13,date:"Oct 19", title:"Trek to Lukla", dist:"11.7 mi", gain:"3,140 ft", maxAlt:"11,137 ft", sleep:"Lukla (9,322 ft)", hl:"Final trail day — long descent back to Lukla.", ll:[27.6869,86.7297], img:"lukla"},
+ {n:14,date:"Oct 20", title:"Extra / buffer day", dist:"—", gain:"—", maxAlt:"—", sleep:"—", hl:"Built-in buffer for weather or rest.", ll:[27.6869,86.7297], img:null},
+ {n:15,date:"Oct 21", title:"Extra / buffer day", dist:"—", gain:"—", maxAlt:"—", sleep:"—", hl:"Built-in buffer for weather or rest.", ll:[27.6869,86.7297], img:null},
+];
+
+const PASSES = [
+ {name:"Kongma La (18,159 ft)", ll:[27.9470,86.8150]},
+ {name:"Cho La (17,782 ft)", ll:[27.9620,86.7450]},
+];
+
+// ---- status banner ----
+(function(){
+  const start = new Date(2026,9,7), end = new Date(2026,9,21,23,59);
+  const now = new Date();
+  const el = document.getElementById('status');
+  if(now < start){ const d = Math.ceil((start-now)/864e5); el.textContent = "Trek starts in "+d+" day"+(d===1?"":"s")+" — Lukla flight Oct 7"; }
+  else if(now <= end){
+    let cur = DAYS[0];
+    const idx = Math.min(14, Math.floor((now-start)/864e5));
+    const day = DAYS[idx];
+    el.textContent = "Day "+day.n+" of 15 — "+day.title;
+    day._isToday = true;
+  } else { el.textContent = "Trek complete — welcome home, Tyler!"; }
+})();
+
+// ---- map ----
+const map = L.map('map').setView([27.86,86.76], 10);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+
+const route = [];
+DAYS.forEach(d=>route.push(d.ll));
+// route the line over the passes between the right days
+route.splice(7,0,PASSES[0].ll);   // Chukhung -> Kongma La -> Lobuche
+route.splice(10,0,PASSES[1].ll);  // Dzongla -> Cho La -> Gokyo
+L.polyline(route,{color:'#b4552d',weight:4,opacity:.85}).addTo(map);
+
+PASSES.forEach(p=>{
+  L.marker(p.ll,{icon:L.divIcon({className:'',html:'<div style="font-size:20px">▲</div>',iconSize:[20,20],iconAnchor:[10,10]})}).addTo(map).bindPopup("<b>"+p.name+"</b>");
+});
+
+const cardFor = {};
+DAYS.forEach(d=>{
+  const m = L.marker(d.ll,{icon:L.divIcon({className:'',html:'<div style="background:#1d3557;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)">'+d.n+'</div>',iconSize:[26,26],iconAnchor:[13,13]})}).addTo(map);
+  m.bindPopup("<b>Day "+d.n+" — "+d.date+"</b><br>"+d.title+"<br><i>"+d.sleep+"</i>");
+  m.on('click',()=>{ const el=document.getElementById('day-'+d.n); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); });
+});
+
+// ---- day cards ----
+const wrap = document.getElementById('days');
+DAYS.forEach(d=>{
+  const img = d.img && IMAGES[d.img];
+  const card = document.createElement('div');
+  card.className = 'day'+(d._isToday?' today':'');
+  card.id = 'day-'+d.n;
+  card.innerHTML =
+    (img ? '<img src="'+img.url+'" alt="'+d.title+' terrain" loading="lazy">' : '') +
+    '<div class="body">'+
+      '<div class="date">Day '+d.n+' &middot; '+d.date+(d._isToday?'<span class="badge">TODAY</span>':'')+(d.pass?'<span class="badge passbadge">HIGH PASS</span>':'')+'</div>'+
+      '<h2>'+d.title+'</h2>'+
+      '<div class="stats"><span>Distance <b>'+d.dist+'</b></span><span>Gain <b>'+d.gain+'</b></span><span>Max alt <b>'+d.maxAlt+'</b></span><span>Sleep <b>'+d.sleep+'</b></span></div>'+
+      '<div class="hl">'+d.hl+'</div>'+
+      (img && img.attr ? '<div class="legend" style="margin:.6rem 0 0">Photo: '+img.attr+'</div>' : '')+
+    '</div>';
+  wrap.appendChild(card);
+});
+</script>
+</body>
+</html>
