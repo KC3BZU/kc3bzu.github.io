@@ -3,8 +3,32 @@
     "at": "2026-10-06T15:40:00+05:45",
     "place": "Kathmandu — Swayambhunath (Monkey Temple) and Durbar Square",
     "message": "Rest day in Kathmandu. Tyler explored Swayambhunath — the Monkey Temple — and Durbar Square this morning, then headed back to the hotel to relax before walking around Thamel in the afternoon. The trek begins tomorrow.",
-    "photo": "assets/2026-10-06-kathmandu-monkeys.jpg",
-    "caption": "Six photos from his rest day in Kathmandu: sunset over the city from the Monkey Temple hill, a mother monkey grooming her baby at sunset, the stupa's Buddha eyes with prayer flags, the long staircase climb to the temple, a row of prayer wheels, and a street dog asleep on a brick step.",
+    "photos": [
+      {
+        "src": "assets/2026-10-06-kathmandu-sunset.jpg",
+        "caption": "Sunset over Kathmandu from the Monkey Temple hill."
+      },
+      {
+        "src": "assets/2026-10-06-kathmandu-monkeys.jpg",
+        "caption": "A mother monkey grooming her baby at sunset."
+      },
+      {
+        "src": "assets/2026-10-06-kathmandu-stupa.jpg",
+        "caption": "The Swayambhunath stupa, its Buddha eyes watching over the city."
+      },
+      {
+        "src": "assets/2026-10-06-kathmandu-steps.jpg",
+        "caption": "The long staircase climb up to the temple."
+      },
+      {
+        "src": "assets/2026-10-06-kathmandu-prayer-wheels.jpg",
+        "caption": "A row of prayer wheels at the temple."
+      },
+      {
+        "src": "assets/2026-10-06-kathmandu-dog.jpg",
+        "caption": "A street dog catching a nap on a brick step."
+      }
+    ],
     "milestones": []
   }
 ]

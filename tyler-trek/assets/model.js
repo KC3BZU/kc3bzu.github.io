@@ -18,12 +18,17 @@ export function safePhoto(value) {
   if(typeof value!=='string'||!value.trim()) return null;
   return /^https:\/\/[^\s]+$/i.test(value)||/^assets\/[\w./-]+\.(jpg|jpeg|png|webp|avif)$/i.test(value)?value:null;
 }
+export function safePhotos(value) {
+  if(!Array.isArray(value)) return null;
+  const out=value.filter(p=>p&&typeof p==='object').map(p=>({src:safePhoto(p.src),caption:typeof p.caption==='string'?p.caption:''})).filter(p=>p.src);
+  return out.length?out:null;
+}
 export function validUpdates(input,now=new Date()) {
   if(!Array.isArray(input)) return [];
   return input.filter(u=>u&&typeof u.message==='string'&&u.message.trim()&&typeof u.at==='string'&&/T.*(?:Z|[+-]\d\d:\d\d)$/.test(u.at)&&Number.isFinite(Date.parse(u.at))&&Date.parse(u.at)<=now.getTime()).map(u=>({
     at:u.at,message:u.message.trim(),place:typeof u.place==='string'?u.place.trim():'',
     day:Number.isInteger(u.day)&&u.day>=1&&u.day<=15?u.day:null,
-    photo:safePhoto(u.photo),caption:typeof u.caption==='string'?u.caption:'',
+    photo:safePhoto(u.photo),caption:typeof u.caption==='string'?u.caption:'',photos:safePhotos(u.photos),
     milestones:Array.isArray(u.milestones)?u.milestones.filter(id=>MILESTONES.some(m=>m.id===id)):[]
   })).sort((a,b)=>Date.parse(b.at)-Date.parse(a.at));
 }

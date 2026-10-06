@@ -1,5 +1,5 @@
 import { MILESTONES } from '../data/itinerary.js';
-import { getPlan,tripStatus,validUpdates,formatAltitude,formatDistance,parseGPX } from './model.js';
+import { getPlan,tripStatus,validUpdates,formatAltitude,formatDistance,parseGPX,safePhoto } from './model.js';
 import { createTrekMap } from './map.js';
 import { createProfile } from './profile.js';
 
@@ -53,7 +53,9 @@ function renderUpdates(failed=false) {
   else if(failed){$('latest-place').textContent='Updates couldn’t load';$('latest-copy').textContent='Please refresh to try again. The planned itinerary is still available.';$('journal-entries').textContent='The update feed is temporarily unavailable. Please refresh to try again.';}
   if(visible.length){
     $('journal-count').textContent=`${visible.length} ${visible.length===1?'FIELD NOTE':'FIELD NOTES'}`;
-    $('journal-entries').replaceChildren(...visible.map(u=>{const article=document.createElement('article');article.className='entry';const time=document.createElement('time');time.dateTime=u.at;time.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kathmandu',dateStyle:'medium',timeStyle:'short'}).format(new Date(u.at))+' NPT';const h=document.createElement('h3');h.textContent=u.place||'A note from the trail';const p=document.createElement('p');p.textContent=u.message;article.append(time,h,p);if(u.photo){const f=document.createElement('figure');const img=document.createElement('img');img.src=u.photo;img.alt=u.caption||'Photo shared with this family update';img.loading='lazy';const cap=document.createElement('figcaption');cap.textContent=u.caption;f.append(img,cap);article.append(f);}return article;}));
+    $('journal-entries').replaceChildren(...visible.map(u=>{const article=document.createElement('article');article.className='entry';const time=document.createElement('time');time.dateTime=u.at;time.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kathmandu',dateStyle:'medium',timeStyle:'short'}).format(new Date(u.at))+' NPT';const h=document.createElement('h3');h.textContent=u.place||'A note from the trail';const p=document.createElement('p');p.textContent=u.message;article.append(time,h,p);const shots=(Array.isArray(u.photos)?u.photos:[]).filter(p=>p&&safePhoto(p.src)).map(p=>({src:p.src,caption:p.caption||''}));
+if(!shots.length&&u.photo)shots.push({src:u.photo,caption:u.caption||''});
+if(shots.length){const gal=document.createElement('div');if(shots.length>1)gal.className='photo-gallery';shots.forEach(s=>{const f=document.createElement('figure');const img=document.createElement('img');img.src=s.src;img.alt=s.caption||'Photo shared with this family update';img.loading='lazy';f.append(img);if(s.caption){const cap=document.createElement('figcaption');cap.textContent=s.caption;f.append(cap);}gal.append(f);});article.append(gal);}return article;}));
   }
   const achieved=new Set(visible.flatMap(u=>u.milestones));
   $('milestone-list').innerHTML=MILESTONES.map(m=>`<div class="milestone ${achieved.has(m.id)?'confirmed':''}"><div class="stamp">${milestoneIcon(m.icon)}</div><h3>${m.name}</h3><p>${m.caption}</p><small>${achieved.has(m.id)?'CONFIRMED ✓':'AWAITING A CHECK-IN'}</small></div>`).join('');
