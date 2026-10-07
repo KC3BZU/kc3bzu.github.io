@@ -9,3 +9,4 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 .import-row:has(#gpx-file:focus-visible) label[for=gpx-file]{outline:3px solid var(--orange);outline-offset:4px}
+.journal-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
