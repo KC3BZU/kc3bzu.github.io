@@ -4,7 +4,7 @@ import { createTrekMap } from './map.js';
 import { createProfile } from './profile.js';
 
 const $=id=>document.getElementById(id);
-let days=getPlan(),units='imperial',selected=tripStatus().day??1,track=null,tour=null,updates=[];
+let days=getPlan(),units='imperial',selected=tripStatus().day??1,track=null,tour=null,updates=[],oldestFirst=false;
 let map;
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const dateLabel=d=>new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
@@ -48,12 +48,13 @@ function milestoneIcon(kind) {
 }
 function renderUpdates(failed=false) {
   const visible=validUpdates(updates);
+  const ordered=oldestFirst?[...visible].reverse():visible;
   const latest=visible[0];
   if(latest){$('latest-place').textContent=latest.place||'A hello from Tyler';$('latest-copy').textContent=`${new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kathmandu',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(latest.at))} NPT · ${latest.message.length>105?latest.message.slice(0,102)+'…':latest.message}`;}
   else if(failed){$('latest-place').textContent='Updates couldn’t load';$('latest-copy').textContent='Please refresh to try again. The planned itinerary is still available.';$('journal-entries').textContent='The update feed is temporarily unavailable. Please refresh to try again.';}
   if(visible.length){
     $('journal-count').textContent=`${visible.length} ${visible.length===1?'FIELD NOTE':'FIELD NOTES'}`;
-    $('journal-entries').replaceChildren(...visible.map(u=>{const article=document.createElement('article');article.className='entry';const time=document.createElement('time');time.dateTime=u.at;time.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kathmandu',dateStyle:'medium',timeStyle:'short'}).format(new Date(u.at))+' NPT';const h=document.createElement('h3');h.textContent=u.place||'A note from the trail';const p=document.createElement('p');p.textContent=u.message;article.append(time,h,p);const shots=(Array.isArray(u.photos)?u.photos:[]).filter(p=>p&&safePhoto(p.src)).map(p=>({src:p.src,caption:p.caption||''}));
+    $('journal-entries').replaceChildren(...ordered.map(u=>{const article=document.createElement('article');article.className='entry';const time=document.createElement('time');time.dateTime=u.at;time.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kathmandu',dateStyle:'medium',timeStyle:'short'}).format(new Date(u.at))+' NPT';const h=document.createElement('h3');h.textContent=u.place||'A note from the trail';const p=document.createElement('p');p.textContent=u.message;article.append(time,h,p);const shots=(Array.isArray(u.photos)?u.photos:[]).filter(p=>p&&safePhoto(p.src)).map(p=>({src:p.src,caption:p.caption||''}));
 if(!shots.length&&u.photo)shots.push({src:u.photo,caption:u.caption||''});
 if(shots.length){const gal=document.createElement('div');if(shots.length>1)gal.className='photo-gallery';shots.forEach(s=>{const f=document.createElement('figure');const img=document.createElement('img');img.src=s.src;img.alt=s.caption||'Photo shared with this family update';img.loading='lazy';f.append(img);if(s.caption){const cap=document.createElement('figcaption');cap.textContent=s.caption;f.append(cap);}gal.append(f);});article.append(gal);}return article;}));
   }
@@ -65,6 +66,7 @@ map=createTrekMap(days,n=>selectDay(n));map.selectDay(selected,false);
 $('previous-day').addEventListener('click',()=>selectDay(selected-1));$('next-day').addEventListener('click',()=>selectDay(selected+1));
 $('plan').addEventListener('change',()=>{stopTour();days=getPlan($('plan').value);picker();renderDay();map.setPlan(days);refreshClocks();});
 for(const mode of ['imperial','metric'])$(mode).addEventListener('click',()=>{units=mode;for(const u of ['imperial','metric'])$(u).setAttribute('aria-pressed',String(u===mode));renderDay();});
+for(const mode of ['sort-newest','sort-oldest'])$(mode).addEventListener('click',()=>{oldestFirst=mode==='sort-oldest';for(const m of ['sort-newest','sort-oldest'])$(m).setAttribute('aria-pressed',String(m===mode));renderUpdates();});
 $('map-mode').addEventListener('click',()=>{stopTour();const is3D=map.toggleTerrain();$('map-mode').textContent=is3D?'3D terrain':'2D map';$('map-mode').setAttribute('aria-pressed',String(is3D));});
 $('map-overview').addEventListener('click',()=>{stopTour();map.overview();});
 $('flyover').setAttribute('aria-pressed','false');
