@@ -143,5 +143,29 @@
     "message": "Morning check-in from Tyler: he's starting his acclimatization hike up to the viewpoint shortly. WiFi isn't working where he is (same outfit as yesterday, he notes), so no photos for now — he'll send an update when he reaches the viewpoint and another when he's back down in Namche.",
     "photos": [],
     "milestones": []
+  },
+  {
+    "at": "2026-10-09T15:07:00+05:45",
+    "place": "Hotel Everest View",
+    "message": "Acclimatization day! Tyler was up and hiking at 6am, beating the breakfast crowds to have Hotel Everest View (3,880m) nearly to himself. A couple of energy snacks held him over for the climb, with a proper breakfast waiting at the viewpoint — plus coffee at 3,880 meters. Lhotse and Ama Dablam played peek-a-boo through the clouds.",
+    "photos": [
+      {
+        "src": "assets/2026-10-09-everest-view-lhotse.jpg",
+        "caption": "Lhotse partially hidden behind the clouds."
+      },
+      {
+        "src": "assets/2026-10-09-everest-view-ama-dablam.jpg",
+        "caption": "Ama Dablam peeking through the clouds."
+      },
+      {
+        "src": "assets/2026-10-09-everest-view-coffee.jpg",
+        "caption": "Coffee at 3,880 meters!"
+      },
+      {
+        "src": "assets/2026-10-09-everest-view-hotel.jpg",
+        "caption": "The entrance to Hotel Everest View (3,880m)."
+      }
+    ],
+    "milestones": []
   }
 ]
