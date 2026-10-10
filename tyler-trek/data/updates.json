@@ -162,13 +162,25 @@
     "milestones": []
   },
   {
-    "at": "2026-10-10T06:05:00+05:45",
-    "place": "Namche Bazaar",
-    "message": "Day 4 begins — this was the breakfast view from the Panorama Lodge: snow-dusted peaks over Namche’s blue rooftops. On the trail within the hour, bound for Pangboche tonight (Tengboche was fully booked, so the lodge owner arranged a room about an hour further along).",
+    "at": "2026-10-10T14:46:00+05:45",
+    "place": "Tengboche",
+    "message": "Day 4: Namche → Tengboche. The morning started with a breakfast view from the Panorama Lodge — snow-dusted peaks over Namche’s blue rooftops. With Tengboche fully booked, the plan was to push on to Pangboche — but a room opened up in Tengboche after all. Mani stone walls, snowy valleys, and a prayer-flagged chorten marked the trail.",
     "photos": [
       {
         "src": "assets/2026-10-10-namche-breakfast-view.jpg",
-        "caption": "The breakfast view from the lodge."
+        "caption": "The breakfast view from the lodge in Namche."
+      },
+      {
+        "src": "assets/2026-10-10-tengboche-mani.jpg",
+        "caption": "Tyler by a mani stone wall on the trail."
+      },
+      {
+        "src": "assets/2026-10-10-tengboche-valley.jpg",
+        "caption": "A snowy valley along the way."
+      },
+      {
+        "src": "assets/2026-10-10-tengboche-chorten.jpg",
+        "caption": "A chorten with prayer flags on the trail."
       }
     ],
     "milestones": []
