@@ -184,5 +184,37 @@
       }
     ],
     "milestones": []
+  },
+  {
+    "at": "2026-10-11T15:05:00+05:45",
+    "place": "Dingboche",
+    "message": "Day 5: Tengboche → Dingboche. Tyler picked a good lodge here — a bit more expensive, but with an attached bathroom and shower, a sunroom that gets super warm during the day (prime sunbathing spot), and a very nice hostess and team. The big news: his first glimpse of Everest, peeking out from behind Lhotse’s ridge. Ama Dablam dominated the views all day, and a yak shared the trail.",
+    "photos": [
+      {
+        "src": "assets/2026-10-11-dingboche-everest-glimpse.jpg",
+        "caption": "First glimpse of Everest, peeking from behind Lhotse’s ridge (Lhotse on the right)."
+      },
+      {
+        "src": "assets/2026-10-11-dingboche-ama-dablam-tyler.jpg",
+        "caption": "Tyler with Ama Dablam behind."
+      },
+      {
+        "src": "assets/2026-10-11-dingboche-chorten.jpg",
+        "caption": "A chorten with Ama Dablam rising behind it."
+      },
+      {
+        "src": "assets/2026-10-11-dingboche-trail.jpg",
+        "caption": "On the trail with Ama Dablam ahead."
+      },
+      {
+        "src": "assets/2026-10-11-dingboche-mani.jpg",
+        "caption": "Mani stones and cairns on the way to Dingboche."
+      },
+      {
+        "src": "assets/2026-10-11-dingboche-yak.jpg",
+        "caption": "A yak on the trail."
+      }
+    ],
+    "milestones": []
   }
 ]
