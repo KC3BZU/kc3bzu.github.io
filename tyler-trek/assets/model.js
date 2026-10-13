@@ -1,10 +1,8 @@
 import { ORIGINAL, MILESTONES } from '../data/itinerary.js';
 export function getPlan(version='original') {
   const days=structuredClone(ORIGINAL);
-  if(version==='family') {
-    Object.assign(days[8],{title:'A shorter day to Dzongla',place:'Dzongla',distance:4.1,gain:1153,high:16165,sleep:15800,headline:'A pause before the next pass.',description:'The family version replaces the Kala Patthar day hike with a shorter trek to Dzongla to stage for Cho La.',route:['Lobuche','Dzongla'],tag:'Staging day'});
-    Object.assign(days[9],{distance:7.2,route:['Dzongla','Cho La','Thagnak','Gokyo']});
-  }
+  // The updated plan (Oct 13) already includes the Dzongla staging day, so both
+  // itinerary options show the same days. The old family-version override was removed.
   return days;
 }
 export function nepalDate(now=new Date()) {
