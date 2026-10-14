@@ -16,7 +16,7 @@ export function createProfile(container,onDay,onTrackPoint) {
     const max=track?samples.at(-1).distance:14;
     xValues=track?samples.map(p=>p.distance):days.map((_,i)=>i);
     const x=v=>left+(v/max)*(W-left-right);
-    const grid=[0,.5,1].map(f=>{const v=lo+(hi-lo)*f;return `<line x1="${left}" x2="${W-right}" y1="${y(v)}" y2="${y(v)}" stroke="#eaede6" stroke-dasharray="2 4"/><text x="${left-7}" y="${y(v)+3}" text-anchor="end">${Math.round(units==='metric'?v*.3048:v).toLocaleString('en-US')}</text>`;}).join('');
+    const grid=[0,.5,1].map(f=>{const v=lo+(hi-lo)*f;return `<line x1="${left}" x2="${W-right}" y1="${y(v)}" y2="${y(v)}" stroke="#eaede6" stroke-dasharray="2 4"/><text x="${left-7}" y="${y(v)+3}" text-anchor="end">${Math.round(v).toLocaleString('en-US')}</text>`;}).join('');
     let shapes='';
     if(track) {
       const stride=Math.max(1,Math.floor(samples.length/1800));
