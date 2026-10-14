@@ -64,7 +64,6 @@ if(shots.length){const gal=document.createElement('div');if(shots.length>1)gal.c
 picker();renderDay();refreshClocks();renderUpdates();
 map=createTrekMap(days,n=>selectDay(n));map.selectDay(selected,false);
 $('previous-day').addEventListener('click',()=>selectDay(selected-1));$('next-day').addEventListener('click',()=>selectDay(selected+1));
-$('plan').addEventListener('change',()=>{stopTour();days=getPlan($('plan').value);picker();renderDay();map.setPlan(days);refreshClocks();});
 for(const mode of ['sort-newest','sort-oldest'])$(mode).addEventListener('click',()=>{oldestFirst=mode==='sort-oldest';for(const m of ['sort-newest','sort-oldest'])$(m).setAttribute('aria-pressed',String(m===mode));renderUpdates();});
 $('map-mode').addEventListener('click',()=>{stopTour();const is3D=map.toggleTerrain();$('map-mode').textContent=is3D?'3D terrain':'2D map';$('map-mode').setAttribute('aria-pressed',String(is3D));});
 $('map-overview').addEventListener('click',()=>{stopTour();map.overview();});
