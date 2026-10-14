@@ -296,5 +296,27 @@
       }
     ],
     "milestones": []
+  },
+  {
+    "at": "2026-10-14T17:34:00+05:45",
+    "place": "Kongma La",
+    "message": "Day 8: Chukhung → Kongma La → Lobuche. The big pass day. Tyler joined up with his Canadian friend Matthew for the crossing. Snowfields, a black-and-white world of peaks, and sun over the high valley — the views heading up were something else.",
+    "photos": [
+      {
+        "src": "assets/2026-10-14-kongma-la-snowfield-bw.jpg",
+        "caption": "Trekkers crossing the snowfield below the pass."
+      },
+      {
+        "src": "assets/2026-10-14-kongma-la-matthew.jpg",
+        "caption": "Matthew, who Tyler joined up with for the pass crossing."
+      },
+      {
+        "src": "assets/2026-10-14-kongma-la-sun.jpg",
+        "caption": "Sun over the high valley on the way up."
+      }
+    ],
+    "milestones": [
+      "kongma"
+    ]
   }
 ]
