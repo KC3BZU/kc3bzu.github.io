@@ -32,11 +32,11 @@ export function validUpdates(input,now=new Date()) {
 }
 export function formatAltitude(feet,units='imperial') {
   if(!Number.isFinite(feet)) return '—';
-  return `${Math.round(units==='metric'?feet*0.3048:feet).toLocaleString('en-US')} ${units==='metric'?'m':'ft'}`;
+  return `${Math.round(feet).toLocaleString('en-US')} ft`;
 }
 export function formatDistance(miles,units='imperial') {
   if(!Number.isFinite(miles)) return '—';
-  return `${(units==='metric'?miles*1.609344:miles).toLocaleString('en-US',{maximumFractionDigits:1})} ${units==='metric'?'km':'mi'}`;
+  return `${miles.toLocaleString('en-US',{maximumFractionDigits:1})} mi`;
 }
 export function nearestIndex(values,target) {
   let best=-1,delta=Infinity;
