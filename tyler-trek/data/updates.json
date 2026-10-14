@@ -140,7 +140,7 @@
   {
     "at": "2026-10-09T15:07:00+05:45",
     "place": "Hotel Everest View",
-    "message": "Acclimatization day! Tyler was up and hiking at 6am, beating the breakfast crowds to have Hotel Everest View (3,880m) nearly to himself. A couple of energy snacks held him over for the climb, with a proper breakfast waiting at the viewpoint — plus coffee at 3,880 meters. Lhotse and Ama Dablam played peek-a-boo through the clouds. The climb up took an hour flat (1.91 miles, 1,339 ft of elevation gain) — “coffee and a view.” The hike back down was “so beautiful,” and spotting some of the BIG ones has him excited for the days ahead.",
+    "message": "Acclimatization day! Tyler was up and hiking at 6am, beating the breakfast crowds to have Hotel Everest View (12,730 ft) nearly to himself. A couple of energy snacks held him over for the climb, with a proper breakfast waiting at the viewpoint — plus coffee at 12,730 ft. Lhotse and Ama Dablam played peek-a-boo through the clouds. The climb up took an hour flat (1.91 miles, 1,339 ft of elevation gain) — “coffee and a view.” The hike back down was “so beautiful,” and spotting some of the BIG ones has him excited for the days ahead.",
     "photos": [
       {
         "src": "assets/2026-10-09-everest-view-lhotse.jpg",
@@ -152,11 +152,11 @@
       },
       {
         "src": "assets/2026-10-09-everest-view-coffee.jpg",
-        "caption": "Coffee at 3,880 meters!"
+        "caption": "Coffee at 12,730 ft!"
       },
       {
         "src": "assets/2026-10-09-everest-view-hotel.jpg",
-        "caption": "The entrance to Hotel Everest View (3,880m)."
+        "caption": "The entrance to Hotel Everest View (12,730 ft)."
       }
     ],
     "milestones": []
@@ -188,7 +188,7 @@
   {
     "at": "2026-10-11T15:05:00+05:45",
     "place": "Dingboche",
-    "message": "Day 5: Tengboche → Dingboche. Bundled up against the morning cold, Tyler set out around 7 for 10km of steady uphill — about the same time on trail as previous days. He picked a good lodge here — a bit more expensive, but with an attached bathroom and shower, a sunroom that gets super warm during the day (prime sunbathing spot), and a very nice hostess and team. The big news: his first glimpse of Everest, peeking out from behind Lhotse’s ridge. Ama Dablam dominated the views all day, and a yak shared the trail. Day 5 by the numbers (per his Garmin): 6.40 miles, 2,270 ft of elevation gain, 3 hours 5 minutes — “absolutely beautiful day, not a cloud in the sky,” Everest, Lhotse and Ama Dablam all in view, and the body still holding up well.",
+    "message": "Day 5: Tengboche → Dingboche. Bundled up against the morning cold, Tyler set out around 7 for 6.2 miles of steady uphill — about the same time on trail as previous days. He picked a good lodge here — a bit more expensive, but with an attached bathroom and shower, a sunroom that gets super warm during the day (prime sunbathing spot), and a very nice hostess and team. The big news: his first glimpse of Everest, peeking out from behind Lhotse’s ridge. Ama Dablam dominated the views all day, and a yak shared the trail. Day 5 by the numbers (per his Garmin): 6.40 miles, 2,270 ft of elevation gain, 3 hours 5 minutes — “absolutely beautiful day, not a cloud in the sky,” Everest, Lhotse and Ama Dablam all in view, and the body still holding up well.",
     "photos": [
       {
         "src": "assets/2026-10-11-tengboche-departure-selfie.jpg",
@@ -300,7 +300,7 @@
   {
     "at": "2026-10-14T17:34:00+05:45",
     "place": "Kongma La",
-    "message": "Day 8: Chukhung → Kongma La → Lobuche. The big pass day. Tyler joined up with his Canadian friend Matthew for the crossing. Snowfields, a black-and-white world of peaks, and sun over the high valley — the views heading up were something else. At the top: the Kongma La marker stone (5,535 m), a turquoise glacial lake, and a long look down the glacial valley toward Lobuche, today’s destination — the small cluster of buildings on the far side of the valley, left of center. Then came the glacier traverse — “genuinely the hardest part of the day. We were all so exhausted from the pass and the glacier traverse took forever.” Lots of rock hopping, since no one trusted the snow by that point of the day. Day 8 by the numbers (per his Garmin): 7.57 miles, 3,806 ft of elevation gain, 5 hours 21 minutes — “Exhausting. Like a tortoise through peanut butter. Hardest day of the trek though. Feel like a true mountain guy now.”",
+    "message": "Day 8: Chukhung → Kongma La → Lobuche. The big pass day. Tyler joined up with his Canadian friend Matthew for the crossing. Snowfields, a black-and-white world of peaks, and sun over the high valley — the views heading up were something else. At the top: the Kongma La marker stone (18,159 ft), a turquoise glacial lake, and a long look down the glacial valley toward Lobuche, today’s destination — the small cluster of buildings on the far side of the valley, left of center. Then came the glacier traverse — “genuinely the hardest part of the day. We were all so exhausted from the pass and the glacier traverse took forever.” Lots of rock hopping, since no one trusted the snow by that point of the day. Day 8 by the numbers (per his Garmin): 7.57 miles, 3,806 ft of elevation gain, 5 hours 21 minutes — “Exhausting. Like a tortoise through peanut butter. Hardest day of the trek though. Feel like a true mountain guy now.”",
     "photos": [
       {
         "src": "assets/2026-10-14-kongma-la-snowfield-bw.jpg",
@@ -332,7 +332,7 @@
       },
       {
         "src": "assets/2026-10-14-kongma-la-marker-stone.jpg",
-        "caption": "The Kongma La marker stone — 5,535 m."
+        "caption": "The Kongma La marker stone — 18,159 ft."
       },
       {
         "src": "assets/2026-10-14-kongma-la-glacier-1.jpg",
