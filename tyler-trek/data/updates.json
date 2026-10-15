@@ -346,5 +346,35 @@
     "milestones": [
       "kongma"
     ]
+  },
+  {
+    "at": "2026-10-15T16:00:00+05:45",
+    "place": "Everest Base Camp",
+    "message": "Day 9: Lobuche → Everest Base Camp → Lobuche. The day-hike decision paid off. Tyler stood at Everest Base Camp (5,364 m), with the icefall and the summit above. And a bonus: a kong ma — the Himalayan snowcock the nearby Kongma La pass is named after.",
+    "photos": [
+      {
+        "src": "assets/2026-10-15-ebc-tyler-everest.jpg",
+        "caption": "Tyler at Everest Base Camp, Everest behind."
+      },
+      {
+        "src": "assets/2026-10-15-ebc-rock.jpg",
+        "caption": "On the Everest Base Camp rock — 5,364 m."
+      },
+      {
+        "src": "assets/2026-10-15-ebc-everest-bw.jpg",
+        "caption": "Everest in black and white."
+      },
+      {
+        "src": "assets/2026-10-15-ebc-kong-ma.jpg",
+        "caption": "A kong ma — the Himalayan snowcock the Kongma La pass is named after."
+      },
+      {
+        "src": "assets/2026-10-15-ebc-everest-summit.jpg",
+        "caption": "The summit of Everest."
+      }
+    ],
+    "milestones": [
+      "ebc"
+    ]
   }
 ]
