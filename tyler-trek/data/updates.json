@@ -376,5 +376,33 @@
     "milestones": [
       "ebc"
     ]
+  },
+  {
+    "at": "2026-10-16T15:35:00+05:45",
+    "place": "Dzongla",
+    "message": "Day 10: Lobuche → Dzongla. A staging day. “Muddy one today. Some nice views… Today I’m just pushing through.” Day 10 by the numbers (per his Garmin): 4.24 miles, 761 ft of elevation gain, 2 hours 7 minutes.",
+    "photos": [
+      {
+        "src": "assets/2026-10-16-dzongla-mani-stone.jpg",
+        "caption": "Trekkers on the trail past a carved mani stone."
+      },
+      {
+        "src": "assets/2026-10-16-dzongla-lake-1.jpg",
+        "caption": "A turquoise lake below snowy peaks."
+      },
+      {
+        "src": "assets/2026-10-16-dzongla-lake-2.jpg",
+        "caption": "Snowy peaks reflected in the turquoise lake."
+      },
+      {
+        "src": "assets/2026-10-16-dzongla-valley.jpg",
+        "caption": "Looking back down the valley."
+      },
+      {
+        "src": "assets/2026-10-16-dzongla-tents.jpg",
+        "caption": "Yellow buildings in the rocky valley."
+      }
+    ],
+    "milestones": []
   }
 ]
