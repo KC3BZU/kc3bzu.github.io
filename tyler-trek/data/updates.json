@@ -404,5 +404,48 @@
       }
     ],
     "milestones": []
+  },
+  {
+    "at": "2026-10-17T17:10:00+05:45",
+    "place": "Gokyo",
+    "message": "Day 11: Dzongla → Cho La → Gokyo. The last high pass of the trip. Snowfields, a long line of trekkers picking their way across, and then the descent into Gokyo — turquoise lakes and the village on the shore.",
+    "photos": [
+      {
+        "src": "assets/2026-10-17-chola-pass-panorama.jpg",
+        "caption": "Prayer flags at the pass."
+      },
+      {
+        "src": "assets/2026-10-17-chola-snowfield.jpg",
+        "caption": "Trekkers crossing the snowfield toward the pass."
+      },
+      {
+        "src": "assets/2026-10-17-chola-tyler.jpg",
+        "caption": "Tyler at the pass."
+      },
+      {
+        "src": "assets/2026-10-17-chola-trekker-line.jpg",
+        "caption": "A line of trekkers picking their way across the snow."
+      },
+      {
+        "src": "assets/2026-10-17-gokyo-lake-clouds.jpg",
+        "caption": "A turquoise lake above Gokyo."
+      },
+      {
+        "src": "assets/2026-10-17-gokyo-village.jpg",
+        "caption": "Gokyo village on the shore of the lake."
+      },
+      {
+        "src": "assets/2026-10-17-gokyo-pond.jpg",
+        "caption": "A small glacial pond in the rocky moraine."
+      },
+      {
+        "src": "assets/2026-10-17-gokyo-glacier-lakes.jpg",
+        "caption": "Glacier ponds scattered through the moraine."
+      }
+    ],
+    "milestones": [
+      "chola",
+      "gokyo"
+    ]
   }
 ]
