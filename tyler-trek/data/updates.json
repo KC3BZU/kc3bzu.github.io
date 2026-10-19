@@ -471,8 +471,17 @@
   {
     "at": "2026-10-19T16:04:00+05:45",
     "place": "Namche Bazaar",
-    "message": "Day 13: Gokyo → Namche. The day tallied 15.40 miles, 3,613 ft of gain, 7 hours. “Mile 10/11 was absolutely diabolical after the downhill I was working with all morning.” “Made it in on fumes.” No pictures from today — the miles of trekking are wearing this warrior out. Tentative plan: back to Lukla tomorrow, if the legs allow.",
-    "photos": [],
+    "message": "Day 13: Gokyo → Namche. The day tallied 15.40 miles, 3,613 ft of gain, 7 hours. “Mile 10/11 was absolutely diabolical after the downhill I was working with all morning.” “Made it in on fumes.” No pictures from today — the miles of trekking are wearing this warrior out. Tentative plan: back to Lukla tomorrow, if the legs allow. And to celebrate being just about done — a cheeky pint at the world’s highest Irish pub tonight.",
+    "photos": [
+      {
+        "src": "assets/2026-10-19-irish-pub-pint.jpg",
+        "caption": "A cheeky pint at the world’s highest Irish pub."
+      },
+      {
+        "src": "assets/2026-10-19-irish-pub-bar.jpg",
+        "caption": "Inside the pub — “If you are drinking to forget, please pay in advance.”"
+      }
+    ],
     "milestones": []
   }
 ]
