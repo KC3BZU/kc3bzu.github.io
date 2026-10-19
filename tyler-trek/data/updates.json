@@ -451,8 +451,21 @@
   {
     "at": "2026-10-18T18:00:00+05:45",
     "place": "Gokyo",
-    "message": "Day 12: A rest day in Gokyo. No pictures to share today — a well-earned break after the Cho La crossing.",
-    "photos": [],
+    "message": "Day 12: A rest day in Gokyo — a well-earned break after the Cho La crossing. Starry skies over the ridge last night, and the village by the lake in the morning light.",
+    "photos": [
+      {
+        "src": "assets/2026-10-18-gokyo-night-sky-1.jpg",
+        "caption": "Stars over the ridge, Gokyo"
+      },
+      {
+        "src": "assets/2026-10-18-gokyo-night-sky-2.jpg",
+        "caption": "Stars over the ridge, Gokyo"
+      },
+      {
+        "src": "assets/2026-10-19-gokyo-morning-village.jpg",
+        "caption": "Gokyo village and lake in the morning light"
+      }
+    ],
     "milestones": []
   },
   {
