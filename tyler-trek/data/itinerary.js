@@ -24,7 +24,7 @@ const rows = [
   ['A shorter day to Dzongla','Dzongla',4.1,1153,16165,15800,'A pause before the next pass.','A shorter trek to Dzongla to stage for Cho La.',['Lobuche','Dzongla'],'Staging day','dingboche'],
   ['Over Cho La to Gokyo','Gokyo',7.2,3238,17617,15594,'From a high pass to turquoise water.','A crossing of Cho La and a descent toward the Gokyo lakes, with a guide.',['Dzongla','Cho La','Thagnak','Gokyo'],'High pass','gokyo'],
   ['A rest day in Gokyo','Gokyo',0,0,15594,15594,'A day to rest by the lakes.','A rest day in Gokyo before the return toward Namche.',['Gokyo'],'Rest day','gokyo'],
-  ['Back to Namche','Namche Bazaar',6.3,2208,13033,11114,'A familiar bend in the trail.','Back to Namche Bazaar before the final trekking day.',['Gokyo','Namche Bazaar'],'The return','namche'],
+  ['Back to Namche','Namche Bazaar',15.4,2208,13033,11114,'A familiar bend in the trail.','Back to Namche Bazaar before the final trekking day.',['Gokyo','Namche Bazaar'],'The return','namche'],
   ['The last miles to Lukla','Lukla',11.7,3140,11137,9322,'Full circle in the foothills.','A long final trail day back to Lukla. One buffer day remains before the planned flight to Kathmandu.',['Namche Bazaar','Monjo','Lukla'],'Trail finish','namche'],
   ['Room for the unexpected',null,null,null,null,null,'A little breathing room.','A flexible day for weather, rest, or a change of plans. The plan lists the flight to Kathmandu on October 22.',[],'Buffer day','gokyo']
 ];
